@@ -75,13 +75,15 @@ namespace ZeikomiWordCloud.ViewModels
         {
             try
             {
-                string command = this.CommonValues.GettweetpyArgs.GettweetPythonPath + string.Format(" {0} {1} {2} {3} {4} {5} ",
-                        this.CommonValues.GettweetpyArgs.BearerToken,
-                        this.CommonValues.GettweetpyArgs.Outdir,
-                        this.CommonValues.GettweetpyArgs.FontFilePath,
+                var config = this.CommonValues.TwitterAPIConfig.Item;
+
+                string command = config.GettweetPythonPath + string.Format(" {0} {1} {2} {3} {4} {5} ",
+                        config.BearerToken,
+                        config.Outdir,
+                        config.FontFilePath,
                         this.Query,
-                        this.CommonValues.GettweetpyArgs.Language,
-                        this.CommonValues.GettweetpyArgs.MaxgetCount);
+                        config.Language,
+                        config.MaxgetCount);
 
                 var myProcess = new Process
                 {

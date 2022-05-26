@@ -12,6 +12,10 @@ namespace ZeikomiWordCloud.ViewModels
 {
     internal class SettingVM : ViewModelBase
     {
+        #region 共通変数
+        /// <summary>
+        /// 共通変数
+        /// </summary>
         public GBLValues CommonValues
         { 
             get
@@ -19,13 +23,21 @@ namespace ZeikomiWordCloud.ViewModels
                 return GBLValues.GetInstance();
             }
         }
+        #endregion
 
-
+        #region 初期化処理
+        /// <summary>
+        /// 初期化処理
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         public override void Init(object sender, EventArgs e)
         {
             this.CommonValues.TwitterAPIConfig.LoadXML();
         }
+        #endregion
 
+        #region 保存
         /// <summary>
         /// 保存
         /// </summary>
@@ -44,7 +56,9 @@ namespace ZeikomiWordCloud.ViewModels
                 ShowMessage.ShowErrorOK(ex.Message, "Error");
             }
         }
+        #endregion
 
+        #region キャンセル
         /// <summary>
         /// キャンセル
         /// </summary>
@@ -62,10 +76,18 @@ namespace ZeikomiWordCloud.ViewModels
                 ShowMessage.ShowErrorOK(ex.Message, "Error");
             }
         }
+        #endregion
 
+        #region クローズ
+        /// <summary>
+        /// クローズ
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         public override void Close(object sender, EventArgs e)
         {
             //throw new NotImplementedException();
         }
+        #endregion
     }
 }

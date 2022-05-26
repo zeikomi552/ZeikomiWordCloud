@@ -79,30 +79,6 @@ namespace ZeikomiWordCloud.Common
         }
         #endregion
 
-        #region Python引数[GettweetpyArgs]プロパティ
-        /// <summary>
-        /// Python引数[GettweetpyArgs]プロパティ用変数
-        /// </summary>
-        GetTweetPyArgsM _GettweetpyArgs = new();
-        /// <summary>
-        /// Python引数[GettweetpyArgs]プロパティ
-        /// </summary>
-        public GetTweetPyArgsM GettweetpyArgs
-        {
-            get
-            {
-                return _GettweetpyArgs;
-            }
-            set
-            {
-                if (_GettweetpyArgs == null || !_GettweetpyArgs.Equals(value))
-                {
-                    _GettweetpyArgs = value;
-                    NotifyPropertyChanged("GettweetpyArgs");
-                }
-            }
-        }
-        #endregion
 
     }
 }
