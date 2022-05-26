@@ -37,7 +37,6 @@ namespace ZeikomiWordCloud.Models
 		}
 		#endregion
 
-
 		#region TwitterAPI用トークン[BearerToken]プロパティ
 		/// <summary>
 		/// TwitterAPI用トークン[BearerToken]プロパティ用変数
@@ -162,33 +161,5 @@ namespace ZeikomiWordCloud.Models
 			}
 		}
 		#endregion
-
-		#region 検索キーワードなど[Query]プロパティ
-		/// <summary>
-		/// 検索キーワードなど[Query]プロパティ用変数
-		/// </summary>
-		string _Query = string.Empty;
-		/// <summary>
-		/// 検索キーワードなど[Query]プロパティ
-		/// </summary>
-		public string Query
-		{
-			get
-			{
-				return _Query;
-			}
-			set
-			{
-				if (_Query == null || !_Query.Equals(value))
-				{
-					_Query = value;
-					NotifyPropertyChanged("Query");
-				}
-			}
-		}
-		#endregion
-
-
-
 	}
 }

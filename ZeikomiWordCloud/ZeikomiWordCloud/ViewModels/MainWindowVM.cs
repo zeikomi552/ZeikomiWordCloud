@@ -7,97 +7,64 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ZeikomiWordCloud.Common;
 using ZeikomiWordCloud.Models;
+using ZeikomiWordCloud.Views;
 
 namespace ZeikomiWordCloud.ViewModels
 {
     public class MainWindowVM : ViewModelBase
     {
-        #region Python引数[GettweetpyArgs]プロパティ
         /// <summary>
-        /// Python引数[GettweetpyArgs]プロパティ用変数
+        /// 共通変数
         /// </summary>
-        GetTweetPyArgsM _GettweetpyArgs = new GetTweetPyArgsM();
-        /// <summary>
-        /// Python引数[GettweetpyArgs]プロパティ
-        /// </summary>
-        public GetTweetPyArgsM GettweetpyArgs
+        public GBLValues CommonValues
         {
             get
             {
-                return _GettweetpyArgs;
+                return GBLValues.GetInstance();
+            }
+        }
+
+        #region 検索キーワード[Query]プロパティ
+        /// <summary>
+        /// 検索キーワード[Query]プロパティ用変数
+        /// </summary>
+        string _Query = string.Empty;
+        /// <summary>
+        /// 検索キーワード[Query]プロパティ
+        /// </summary>
+        public string Query
+        {
+            get
+            {
+                return _Query;
             }
             set
             {
-                if (_GettweetpyArgs == null || !_GettweetpyArgs.Equals(value))
+                if (_Query == null || !_Query.Equals(value))
                 {
-                    _GettweetpyArgs = value;
-                    NotifyPropertyChanged("GettweetpyArgs");
+                    _Query = value;
+                    NotifyPropertyChanged("Query");
                 }
             }
         }
         #endregion
 
-        #region ツイッターAPIGetCommand用コンフィグ[TwitterAPIConfig]プロパティ
         /// <summary>
-        /// ツイッターAPIGetCommand用コンフィグ[TwitterAPIConfig]プロパティ用変数
+        /// 初期化処理
         /// </summary>
-        ConfigManager _TwitterAPIConfig = new ConfigManager("Config", "TwitterAPI.config");
-        /// <summary>
-        /// ツイッターAPIGetCommand用コンフィグ[TwitterAPIConfig]プロパティ
-        /// </summary>
-        public ConfigManager TwitterAPIConfig
-        {
-            get
-            {
-                return _TwitterAPIConfig;
-            }
-            set
-            {
-                if (_TwitterAPIConfig == null || !_TwitterAPIConfig.Equals(value))
-                {
-                    _TwitterAPIConfig = value;
-                    NotifyPropertyChanged("TwitterAPIConfig");
-                }
-            }
-        }
-        #endregion
-
-        #region Python.exeのパス[PythonPath]プロパティ
-        /// <summary>
-        /// Python.exeのパス[PythonPath]プロパティ用変数
-        /// </summary>
-        string _PythonPath = @"C:\ProgramData\Anaconda3\python.exe";
-        /// <summary>
-        /// Python.exeのパス[PythonPath]プロパティ
-        /// </summary>
-        public string PythonPath
-        {
-            get
-            {
-                return _PythonPath;
-            }
-            set
-            {
-                if (_PythonPath == null || !_PythonPath.Equals(value))
-                {
-                    _PythonPath = value;
-                    NotifyPropertyChanged("PythonPath");
-                }
-            }
-        }
-        #endregion
-
-
-
-
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         public override void Init(object sender, EventArgs e)
         {
-            var path = this.TwitterAPIConfig.ConfigFile;
-
-            if (File.Exists(path))
+            try
             {
-                this.GettweetpyArgs = XMLUtil.Deserialize<GetTweetPyArgsM>(path);
+                this.CommonValues.TwitterAPIConfig.LoadXML();
+            }
+            catch (Exception ex)
+            {
+                ShowMessage.ShowErrorOK(ex.Message, "Error");
             }
         }
 
@@ -106,42 +73,60 @@ namespace ZeikomiWordCloud.ViewModels
         /// </summary>
         public void Execute()
         {
-            string command = this.GettweetpyArgs.GettweetPythonPath + string.Format(" {0} {1} {2} {3} {4} {5} ",
-                    this.GettweetpyArgs.BearerToken,
-                    this.GettweetpyArgs.Outdir,
-                    this.GettweetpyArgs.FontFilePath,
-                    this.GettweetpyArgs.Query,
-                    this.GettweetpyArgs.Language,
-                    this.GettweetpyArgs.MaxgetCount);
-
-            var myProcess = new Process
+            try
             {
-                StartInfo = new ProcessStartInfo(this.PythonPath)
+                string command = this.CommonValues.GettweetpyArgs.GettweetPythonPath + string.Format(" {0} {1} {2} {3} {4} {5} ",
+                        this.CommonValues.GettweetpyArgs.BearerToken,
+                        this.CommonValues.GettweetpyArgs.Outdir,
+                        this.CommonValues.GettweetpyArgs.FontFilePath,
+                        this.Query,
+                        this.CommonValues.GettweetpyArgs.Language,
+                        this.CommonValues.GettweetpyArgs.MaxgetCount);
+
+                var myProcess = new Process
                 {
-                    UseShellExecute = false,
-                    RedirectStandardOutput = true,
-                    Arguments = command
-                }
-            };
+                    StartInfo = new ProcessStartInfo(this.CommonValues.PythonPath)
+                    {
+                        UseShellExecute = false,
+                        RedirectStandardOutput = true,
+                        Arguments = command
+                    }
+                };
 
-            myProcess.Start();
-            StreamReader myStreamReader = myProcess.StandardOutput;
+                myProcess.Start();
+                StreamReader myStreamReader = myProcess.StandardOutput;
 
-            string? myString = myStreamReader.ReadLine();
-            myProcess.WaitForExit();
-            myProcess.Close();
-            Console.WriteLine(myString);
+                string? myString = myStreamReader.ReadLine();
+                myProcess.WaitForExit();
+                myProcess.Close();
+                Console.WriteLine(myString);
+            }
+            catch (Exception ex)
+            {
+                ShowMessage.ShowErrorOK(ex.Message, "Error");
+            }
         }
 
-        public override void Close(object sender, EventArgs e)
+        public void OpenSetting()
         {
-            string path = this.TwitterAPIConfig.ConfigDir;
-            if (!Directory.Exists(path))
+            var wm = new SettingV();
+
+            if (wm.ShowDialog() == true)
             {
-                Directory.CreateDirectory(path);
+                
+
             }
 
-            XMLUtil.Seialize<GetTweetPyArgsM>(this.TwitterAPIConfig.ConfigFile, this.GettweetpyArgs);
+        }
+        public override void Close(object sender, EventArgs e)
+        {
+            //string path = this.TwitterAPIConfig.ConfigDir;
+            //if (!Directory.Exists(path))
+            //{
+            //    Directory.CreateDirectory(path);
+            //}
+
+            //XMLUtil.Seialize<GetTweetPyArgsM>(this.TwitterAPIConfig.ConfigFile, this.GettweetpyArgs);
         }
     }
 }

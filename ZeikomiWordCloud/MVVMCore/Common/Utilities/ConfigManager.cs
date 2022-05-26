@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MVVMCore.BaseClass;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -7,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace MVVMCore.Common.Utilities
 {
-    public class ConfigManager
+    public class ConfigManager<T> : ModelBase
     {
         #region コンフィグディレクトリ
         /// <summary>
@@ -27,12 +28,13 @@ namespace MVVMCore.Common.Utilities
         /// <summary>
         /// コンストラクタ
         /// </summary>
-        /// <param name="config_dir">コンフィグディレクトリ</param>
+        /// <param name="config_dir_name">コンフィグディレクトリ名</param>
         /// <param name="config_file_name">コンフィグファイル名</param>
-        public ConfigManager(string config_dir, string config_file_name)
+        public ConfigManager(string config_dir_name, string config_file_name, T item)
         {
-            this.ConfigDirectory = config_dir;
+            this.ConfigDirectory = config_dir_name;
             this.ConfigFileName = config_file_name;
+            this.Item = item;
         }
         #endregion
 
@@ -61,6 +63,60 @@ namespace MVVMCore.Common.Utilities
             get
             {
                 return Path.Combine(ConfigDir, ConfigFileName);
+            }
+        }
+        #endregion
+
+        #region 要素[Item]プロパティ
+        /// <summary>
+        /// 要素[Item]プロパティ用変数
+        /// </summary>
+        T _Item;
+        /// <summary>
+        /// 要素[Item]プロパティ
+        /// </summary>
+        public T Item
+        {
+            get
+            {
+                return _Item;
+            }
+            set
+            {
+                if (_Item == null || !_Item.Equals(value))
+                {
+                    _Item = value;
+                    NotifyPropertyChanged("Item");
+                }
+            }
+        }
+        #endregion
+
+        #region ファイルの保存処理
+        /// <summary>
+        /// ファイルの保存処理
+        /// </summary>
+        public void SaveXML()
+        {
+            XMLUtil.Seialize<T>(this.ConfigFile, this.Item);
+        }
+        #endregion
+
+        #region ロード処理
+        /// <summary>
+        /// ロード処理
+        /// </summary>
+        /// <returns>ファイルのロード処理</returns>
+        public bool LoadXML()
+        {
+            if (File.Exists(this.ConfigFile))
+            {
+                this.Item = XMLUtil.Deserialize<T>(this.ConfigFile);
+                return true;
+            }
+            else
+            {
+                return false;
             }
         }
         #endregion

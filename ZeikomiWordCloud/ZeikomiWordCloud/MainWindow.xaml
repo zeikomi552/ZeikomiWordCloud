@@ -21,62 +21,30 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
-            <RowDefinition Height="297*"/>
+            <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <Grid>
-            <StackPanel>
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock Width="100" VerticalAlignment="Center" Margin="5" Text="Pythonパス"/>
-                    <TextBlock VerticalAlignment="Center" Margin="5" Text=":"/>
-                    <TextBox Width="500" VerticalAlignment="Center" Margin="5" Text="{Binding PythonPath}"/>
-                </StackPanel>
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock Width="100" VerticalAlignment="Center" Margin="5" Text="Pythonスクリプトパス"/>
-                    <TextBlock VerticalAlignment="Center" Margin="5" Text=":"/>
-                    <TextBox Width="500" VerticalAlignment="Center" Margin="5" Text="{Binding GettweetpyArgs.GettweetPythonPath}"/>
-                </StackPanel>
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock Width="100" VerticalAlignment="Center" Margin="5" Text="BearerToken"/>
-                    <TextBlock VerticalAlignment="Center" Margin="5" Text=":"/>
-                    <TextBox Width="500" VerticalAlignment="Center" Margin="5" Text="{Binding GettweetpyArgs.BearerToken}"/>
-                </StackPanel>
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock Width="100" VerticalAlignment="Center" Margin="5" Text="出力先フォルダ"/>
-                    <TextBlock VerticalAlignment="Center" Margin="5" Text=":"/>
-                    <TextBox Width="500" VerticalAlignment="Center" Margin="5" Text="{Binding GettweetpyArgs.Outdir}"/>
-                </StackPanel>
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock Width="100" VerticalAlignment="Center" Margin="5" Text="フォントパス"/>
-                    <TextBlock VerticalAlignment="Center" Margin="5" Text=":"/>
-                    <TextBox Width="500" VerticalAlignment="Center" Margin="5" Text="{Binding GettweetpyArgs.FontFilePath}"/>
-                </StackPanel>
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock Width="100" VerticalAlignment="Center" Margin="5" Text="検索キーワード"/>
-                    <TextBlock VerticalAlignment="Center" Margin="5" Text=":"/>
-                    <TextBox Width="100" VerticalAlignment="Center" Margin="5" Text="{Binding GettweetpyArgs.Query}"/>
-                </StackPanel>
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock Width="100" VerticalAlignment="Center" Margin="5" Text="言語"/>
-                    <TextBlock VerticalAlignment="Center" Margin="5" Text=":"/>
-                    <TextBox Width="100" VerticalAlignment="Center" Margin="5" Text="{Binding GettweetpyArgs.Language}"/>
-                </StackPanel>
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock Width="100" VerticalAlignment="Center" Margin="5" Text="API実行回数"/>
-                    <TextBlock VerticalAlignment="Center" Margin="5" Text=":"/>
-                    <TextBox Width="100" VerticalAlignment="Center" Margin="5" Text="{Binding GettweetpyArgs.MaxgetCount}"/>
-                </StackPanel>
-                <StackPanel Orientation="Horizontal">
-                    <Button Margin="5" Content="実行" Width="100">
-                        <b:Interaction.Triggers>
-                            <b:EventTrigger EventName="Click">
-                                <b:CallMethodAction TargetObject="{Binding}" MethodName="Execute"/>
-                            </b:EventTrigger>
-                        </b:Interaction.Triggers>
-                    </Button>
-                </StackPanel>
+        <StackPanel Orientation="Horizontal">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Width="100" VerticalAlignment="Center" Margin="5" Text="検索キーワード"/>
+                <TextBlock VerticalAlignment="Center" Margin="5" Text=":"/>
+                <TextBox Width="200" VerticalAlignment="Center" Margin="5" Text="{Binding Query}"/>
             </StackPanel>
-
-        </Grid>
-
+            <StackPanel Orientation="Horizontal">
+                <Button Margin="5" Content="実行" Width="100">
+                    <b:Interaction.Triggers>
+                        <b:EventTrigger EventName="Click">
+                            <b:CallMethodAction TargetObject="{Binding}" MethodName="Execute"/>
+                        </b:EventTrigger>
+                    </b:Interaction.Triggers>
+                </Button>
+                <Button Margin="5" Content="設定" Width="100">
+                    <b:Interaction.Triggers>
+                        <b:EventTrigger EventName="Click">
+                            <b:CallMethodAction TargetObject="{Binding}" MethodName="OpenSetting"/>
+                        </b:EventTrigger>
+                    </b:Interaction.Triggers>
+                </Button>
+            </StackPanel>
+        </StackPanel>
     </Grid>
 </Window>
