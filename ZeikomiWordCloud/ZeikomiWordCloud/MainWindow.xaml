@@ -57,11 +57,17 @@
                 <ColumnDefinition MinWidth="150" Width="auto"/>
             </Grid.ColumnDefinitions>
             <GroupBox Header="名詞">
-                <DataGrid IsReadOnly="True" AutoGenerateColumns="False" ItemsSource="{Binding NounLists.Items}">
+                <DataGrid IsReadOnly="True" AutoGenerateColumns="False" ItemsSource="{Binding NounLists.Items}"
+                          SelectedItem="{Binding NounLists.SelectedItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="名詞" Binding="{Binding Noun}" Width="*"/>
+                        <DataGridTextColumn Header="名詞" Binding="{Binding Noun}" Width="auto"/>
                         <DataGridTextColumn Header="出現回数" Binding="{Binding Count}"/>
                     </DataGrid.Columns>
+                    <b:Interaction.Triggers>
+                        <b:EventTrigger EventName="MouseDoubleClick">
+                            <b:CallMethodAction MethodName="NounCountRowDoubleClick" TargetObject="{Binding}"/>
+                        </b:EventTrigger>
+                    </b:Interaction.Triggers>
                 </DataGrid>
             </GroupBox>
             <Grid Grid.Column="1">
@@ -72,7 +78,14 @@
         </Grid>
         <Grid Grid.Row="2">
             <GroupBox Header="ツイート内容">
-                <DataGrid ItemsSource="{Binding TweetItems.Items}" IsReadOnly="True"/>
+                <DataGrid ItemsSource="{Binding TweetItems.Items}" 
+                          SelectedItem="{Binding TweetItems.SelectedItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True">
+                    <b:Interaction.Triggers>
+                        <b:EventTrigger EventName="MouseDoubleClick">
+                            <b:CallMethodAction MethodName="TwitterRowDoubleClick" TargetObject="{Binding}"/>
+                        </b:EventTrigger>
+                    </b:Interaction.Triggers>
+                </DataGrid>
             </GroupBox>
         </Grid>
 

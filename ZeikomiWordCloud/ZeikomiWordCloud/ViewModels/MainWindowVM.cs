@@ -274,6 +274,55 @@ namespace ZeikomiWordCloud.ViewModels
         }
         #endregion
 
+        #region 行のダブルクリック処理
+        /// <summary>
+        /// 行のダブルクリック処理
+        /// </summary>
+        public void NounCountRowDoubleClick()
+        {
+            try
+            {
+                if (this.NounLists != null && this.NounLists.SelectedItem != null)
+                {
+                    this.Query = this.Query + " " + this.NounLists.SelectedItem.Noun;
+                }
+            }
+            catch (Exception e)
+            {
+                ShowMessage.ShowErrorOK(e.Message, "Error");
+            }
+        }
+        #endregion
+
+        #region ツイッター行クリック
+        /// <summary>
+        /// ツイッター行クリック
+        /// </summary>
+        public void TwitterRowDoubleClick()
+        {
+            try
+            {
+                if (this.TweetItems != null && this.TweetItems.SelectedItem != null)
+                {
+                    string url = String.Format("https://twitter.com/{0}/status/{1}",
+                        this.TweetItems.SelectedItem.UserName, this.TweetItems.SelectedItem.Id_X);
+
+                    ProcessStartInfo pi = new ProcessStartInfo()
+                    {
+                        FileName = url,
+                        UseShellExecute = true,
+                    };
+
+                    Process.Start(pi);
+                }
+            }
+            catch (Exception e)
+            {
+                ShowMessage.ShowErrorOK(e.Message, "Error");
+            }
+        }
+        #endregion
+
         #region 名詞リストを開いて画面に表示する
         /// <summary>
         /// 名詞リストを開いて画面に表示する
