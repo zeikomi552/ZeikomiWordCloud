@@ -75,6 +75,13 @@
                     <Image Margin="5" Source="{Binding ImagePath, Converter={StaticResource StringToImageSourceConverter}}"/>
                 </GroupBox>
             </Grid>
+
+            <Grid Grid.Column="2">
+                <GroupBox Header="検索履歴">
+                    <DataGrid IsReadOnly="False" 
+                              ItemsSource="{Binding SearchHistory.Items}" SelectedItem="{Binding SearchHistory.SelectedItem}"/>
+                </GroupBox>
+            </Grid>
         </Grid>
         <Grid Grid.Row="2">
             <GroupBox Header="ツイート内容">

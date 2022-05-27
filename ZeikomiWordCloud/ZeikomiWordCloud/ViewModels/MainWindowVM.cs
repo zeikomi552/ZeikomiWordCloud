@@ -74,6 +74,31 @@ namespace ZeikomiWordCloud.ViewModels
         }
         #endregion
 
+        #region 検索履歴[SearchHistory]プロパティ
+        /// <summary>
+        /// 検索履歴[SearchHistory]プロパティ用変数
+        /// </summary>
+        ModelList<SearchHistoryM> _SearchHistory = new ModelList<SearchHistoryM>();
+        /// <summary>
+        /// 検索履歴[SearchHistory]プロパティ
+        /// </summary>
+        public ModelList<SearchHistoryM> SearchHistory
+        {
+            get
+            {
+                return _SearchHistory;
+            }
+            set
+            {
+                if (_SearchHistory == null || !_SearchHistory.Equals(value))
+                {
+                    _SearchHistory = value;
+                    NotifyPropertyChanged("SearchHistory");
+                }
+            }
+        }
+        #endregion
+
         #region 名詞リスト[NounLists]プロパティ
         /// <summary>
         /// 名詞リスト[NounLists]プロパティ用変数
@@ -189,6 +214,9 @@ namespace ZeikomiWordCloud.ViewModels
 
                 // ツイートデータの読み込み
                 OpenTweetData();
+
+                // 検索履歴に追加
+                this.SearchHistory.Items.Insert(0,new SearchHistoryM(this.Query, new DateTimeOffset(DateTime.Now)));
             }
             catch (Exception ex)
             {
