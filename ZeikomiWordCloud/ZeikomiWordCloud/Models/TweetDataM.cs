@@ -1,4 +1,5 @@
-﻿using MVVMCore.BaseClass;
+﻿using ClosedXML.Excel;
+using MVVMCore.BaseClass;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -84,26 +85,26 @@ namespace ZeikomiWordCloud.Models
 		}
 		#endregion
 
-		#region 言語[lang]プロパティ
+		#region 言語[Lang]プロパティ
 		/// <summary>
-		/// 言語[lang]プロパティ用変数
+		/// 言語[Lang]プロパティ用変数
 		/// </summary>
-		string _lang = string.Empty;
+		string _Lang = string.Empty;
 		/// <summary>
-		/// 言語[lang]プロパティ
+		/// 言語[Lang]プロパティ
 		/// </summary>
-		public string lang
+		public string Lang
 		{
 			get
 			{
-				return _lang;
+				return _Lang;
 			}
 			set
 			{
-				if (_lang == null || !_lang.Equals(value))
+				if (_Lang == null || !_Lang.Equals(value))
 				{
-					_lang = value;
-					NotifyPropertyChanged("lang");
+					_Lang = value;
+					NotifyPropertyChanged("Lang");
 				}
 			}
 		}
@@ -284,6 +285,31 @@ namespace ZeikomiWordCloud.Models
 		}
 		#endregion
 
+		#region ユーザー名[UserName]プロパティ
+		/// <summary>
+		/// ユーザー名[UserName]プロパティ用変数
+		/// </summary>
+		string _UserName = string.Empty;
+		/// <summary>
+		/// ユーザー名[UserName]プロパティ
+		/// </summary>
+		public string UserName
+		{
+			get
+			{
+				return _UserName;
+			}
+			set
+			{
+				if (_UserName == null || !_UserName.Equals(value))
+				{
+					_UserName = value;
+					NotifyPropertyChanged("UserName");
+				}
+			}
+		}
+		#endregion
+
 		#region 作者説明[Description]プロパティ
 		/// <summary>
 		/// 作者説明[Description]プロパティ用変数
@@ -409,6 +435,85 @@ namespace ZeikomiWordCloud.Models
 		}
 		#endregion
 
+		private object AdjustValue(object cell_value, int type)
+        {
+            switch (type)
+            {
+				case 0:	// string
+                    {
+						if (cell_value == null)
+						{
+							return string.Empty;
+						}
+						else
+                        {
+							return cell_value.ToString()!;
+                        }
+                    }
+					case 1:	// int
+                    {
+						if (cell_value == null)
+						{
+							return (int)0;
+						}
+						else
+						{
+							int num = 0;
+							int.TryParse(cell_value.ToString()!, out num);
+							return num;
+						}
+                    }
+				case 2: // DateTime
+					{
+						if (cell_value == null)
+						{
+							return DateTime.MinValue;
+						}
+						else
+						{
+							DateTime datetime = DateTime.MinValue;
+							DateTime.TryParseExact(cell_value.ToString()!, "yyyy-MM-DDTHH:mm:ss.tttZ", null, System.Globalization.DateTimeStyles.None, out datetime);
+							return datetime;
+						}
+					}
+				default:
+                    {
+						return cell_value;
+                    }
+			}
 
+        }
+
+		public TweetDataM()
+		{
+		}
+		public TweetDataM(IXLRow row)
+		{
+			SetCellData(row);
+		}
+
+		public void SetCellData(IXLRow row)
+        {
+			string column = "B";
+			var b_cell = row.Cell(column).Value == null ? string.Empty : row.Cell(column).Value;
+			this.Autor_Id = (string)AdjustValue(row.Cell("B").Value, 0);
+			this.Id_X = (string)AdjustValue(row.Cell("C").Value, 0);
+			this.CreatedAt = (DateTime)AdjustValue(row.Cell("D").Value, 2);
+			this.Lang = (string)AdjustValue(row.Cell("E").Value, 0);
+			this.Text = (string)AdjustValue(row.Cell("F").Value, 0);
+			this.Retweet_Count = (int)AdjustValue(row.Cell("G").Value, 1);
+			this.Replay_Count = (int)AdjustValue(row.Cell("H").Value, 1);
+			this.Like_Count = (int)AdjustValue(row.Cell("I").Value, 1);
+			this.Quate_Count = (int)AdjustValue(row.Cell("J").Value, 1);
+			this.CreatedAtAutor = (DateTime)AdjustValue(row.Cell("K").Value, 2);
+			this.Name = (string)AdjustValue(row.Cell("L").Value, 0);
+			this.UserName = (string)AdjustValue(row.Cell("M").Value, 0);
+			//this.Text = (string)AdjustValue(row.Cell("N").Value, 0);
+			this.Description = (string)AdjustValue(row.Cell("O").Value, 0);
+			this.Follower_Count = (int)AdjustValue(row.Cell("P").Value, 1);
+			this.Follow_Count = (int)AdjustValue(row.Cell("Q").Value, 1);
+			this.Tweet_Count = (int)AdjustValue(row.Cell("R").Value, 1);
+			this.Like_Count = (int)AdjustValue(row.Cell("S").Value, 1);
+		}
 	}
 }

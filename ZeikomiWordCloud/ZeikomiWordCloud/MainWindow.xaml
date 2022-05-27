@@ -25,6 +25,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <StackPanel Orientation="Horizontal">
             <StackPanel Orientation="Horizontal">
@@ -69,5 +70,17 @@
                 </GroupBox>
             </Grid>
         </Grid>
+        <Grid Grid.Row="2">
+            <GroupBox Header="ツイート内容">
+                <DataGrid AutoGenerateColumns="False" ItemsSource="{Binding TweetItems.Items}">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="作者ID" Binding="{Binding Autor_Id}"/>
+                        <DataGridTextColumn Header="ツイートID" Binding="{Binding Id_X}"/>
+                        <DataGridTextColumn Header="ツイート内容" Binding="{Binding Text}"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </GroupBox>
+        </Grid>
+
     </Grid>
 </Window>
