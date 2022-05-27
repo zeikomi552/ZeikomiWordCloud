@@ -187,7 +187,7 @@ namespace ZeikomiWordCloud.ViewModels
                         "\"" + config.Language + "\"",
                         config.MaxgetCount,
                          "\"" + config.Background + "\"",
-                         "\"" + config.ColorMap + "\"");
+                         "\"" + config.ColorMap.ToString() + "\"");
 
                 var myProcess = new Process
                 {

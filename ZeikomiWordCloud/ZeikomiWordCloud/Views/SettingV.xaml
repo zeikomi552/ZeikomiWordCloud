@@ -3,11 +3,20 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:sys="clr-namespace:System;assembly=mscorlib"
         xmlns:hlp="clr-namespace:MVVMCore.Common.Helpers;assembly=MVVMCore"
+        xmlns:enum="clr-namespace:ZeikomiWordCloud.Common.Enums"
         xmlns:local="clr-namespace:ZeikomiWordCloud.Views"
         xmlns:ViewModels="clr-namespace:ZeikomiWordCloud.ViewModels" xmlns:b="http://schemas.microsoft.com/xaml/behaviors" x:Class="ZeikomiWordCloud.Views.SettingV"
         mc:Ignorable="d"
         Title="SettingV" Height="450" Width="800" hlp:DialogResultHelper.DialogResult="{Binding DialogResult, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+    <Window.Resources>
+        <ObjectDataProvider MethodName="GetValues" ObjectType="{x:Type sys:Enum}" x:Key="ColormapValues">
+            <ObjectDataProvider.MethodParameters>
+                <x:Type TypeName="enum:enumColormap"/>
+            </ObjectDataProvider.MethodParameters>
+        </ObjectDataProvider>
+    </Window.Resources>
     <Window.DataContext>
         <ViewModels:SettingVM/>
     </Window.DataContext>
@@ -74,7 +83,7 @@
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Width="100" VerticalAlignment="Center" Margin="5" Text="カラーマップ"/>
                         <TextBlock VerticalAlignment="Center" Margin="5" Text=":"/>
-                        <TextBox Width="100" VerticalAlignment="Center" Margin="5" Text="{Binding ColorMap}"/>
+                        <ComboBox Margin="5" ItemsSource="{Binding Mode=OneWay, Source={StaticResource ColormapValues}}" SelectedItem="{Binding ColorMap}"/>
                     </StackPanel>
                 </StackPanel>
             </TabItem>

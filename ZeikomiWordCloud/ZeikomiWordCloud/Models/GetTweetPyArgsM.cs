@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ZeikomiWordCloud.Common.Enums;
 
 namespace ZeikomiWordCloud.Models
 {
@@ -166,11 +167,11 @@ namespace ZeikomiWordCloud.Models
 		/// <summary>
 		/// カラーマップ[ColorMap]プロパティ用変数
 		/// </summary>
-		string _ColorMap = "bone";
+		enumColormap _ColorMap = enumColormap.flag;
 		/// <summary>
 		/// カラーマップ[ColorMap]プロパティ
 		/// </summary>
-		public string ColorMap
+		public enumColormap ColorMap
 		{
 			get
 			{
@@ -178,7 +179,7 @@ namespace ZeikomiWordCloud.Models
 			}
 			set
 			{
-				if (_ColorMap == null || !_ColorMap.Equals(value))
+				if (!_ColorMap.Equals(value))
 				{
 					_ColorMap = value;
 					NotifyPropertyChanged("ColorMap");
