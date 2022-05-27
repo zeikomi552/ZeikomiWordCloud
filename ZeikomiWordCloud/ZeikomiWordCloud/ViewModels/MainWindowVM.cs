@@ -244,9 +244,12 @@ namespace ZeikomiWordCloud.ViewModels
 
                             while(true)
                             {
-                                var twdata = new TweetDataM(worksheet.Row(row));
-                                if (twdata.Autor_Id == String.Empty)
+                                if (worksheet.Cell("B" + row.ToString()).Value == null ||
+                                    worksheet.Cell("B" + row.ToString()).Value.ToString() == String.Empty)
+                                {
                                     break;
+                                }
+                                var twdata = new TweetDataM(worksheet.Row(row));
                                 list.Add(twdata);
                                 row++;
                             }

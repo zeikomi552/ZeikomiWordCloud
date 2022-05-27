@@ -2,6 +2,7 @@
 using MVVMCore.BaseClass;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -64,11 +65,11 @@ namespace ZeikomiWordCloud.Models
 		/// <summary>
 		/// 作成日時[CreatedAt]プロパティ用変数
 		/// </summary>
-		DateTime _CreatedAt = DateTime.MinValue;
+		DateTimeOffset _CreatedAt = DateTimeOffset.MinValue;
 		/// <summary>
 		/// 作成日時[CreatedAt]プロパティ
 		/// </summary>
-		public DateTime CreatedAt
+		public DateTimeOffset CreatedAt
 		{
 			get
 			{
@@ -239,11 +240,11 @@ namespace ZeikomiWordCloud.Models
 		/// <summary>
 		/// 作者作成日[CreatedAtAutor]プロパティ用変数
 		/// </summary>
-		DateTime _CreatedAtAutor = DateTime.MinValue;
+		DateTimeOffset _CreatedAtAutor = DateTimeOffset.MinValue;
 		/// <summary>
 		/// 作者作成日[CreatedAtAutor]プロパティ
 		/// </summary>
-		public DateTime CreatedAtAutor
+		public DateTimeOffset CreatedAtAutor
 		{
 			get
 			{
@@ -463,17 +464,26 @@ namespace ZeikomiWordCloud.Models
 							return num;
 						}
                     }
-				case 2: // DateTime
+				case 2: // DateTimeOffset
 					{
 						if (cell_value == null)
 						{
-							return DateTime.MinValue;
+							return DateTimeOffset.MinValue;
 						}
 						else
 						{
-							DateTime datetime = DateTime.MinValue;
-							DateTime.TryParseExact(cell_value.ToString()!, "yyyy-MM-DDTHH:mm:ss.tttZ", null, System.Globalization.DateTimeStyles.None, out datetime);
-							return datetime;
+							try
+							{
+								DateTime datetime = DateTime.MinValue;
+								string date_txt = cell_value.ToString()!;
+								DateTime.TryParseExact(date_txt, "yyyy-MM-ddTHH:mm:ss.fffZ", CultureInfo.CurrentCulture, System.Globalization.DateTimeStyles.None, out datetime);
+								DateTimeOffset dt_ofset = datetime;
+								return dt_ofset;
+							}
+							catch
+							{ 
+								return DateTimeOffset.MinValue;
+							}
 						}
 					}
 				default:
@@ -496,19 +506,19 @@ namespace ZeikomiWordCloud.Models
         {
 			string column = "B";
 			var b_cell = row.Cell(column).Value == null ? string.Empty : row.Cell(column).Value;
-			this.Autor_Id = (string)AdjustValue(row.Cell("B").Value, 0);
-			this.Id_X = (string)AdjustValue(row.Cell("C").Value, 0);
-			this.CreatedAt = (DateTime)AdjustValue(row.Cell("D").Value, 2);
+			this.Id_X = (string)AdjustValue(row.Cell("B").Value, 0);
+			this.CreatedAt = (DateTimeOffset)AdjustValue(row.Cell("C").Value, 2);
+			this.Text = (string)AdjustValue(row.Cell("D").Value, 0);
 			this.Lang = (string)AdjustValue(row.Cell("E").Value, 0);
-			this.Text = (string)AdjustValue(row.Cell("F").Value, 0);
+			this.Autor_Id = (string)AdjustValue(row.Cell("F").Value, 0);
 			this.Retweet_Count = (int)AdjustValue(row.Cell("G").Value, 1);
 			this.Replay_Count = (int)AdjustValue(row.Cell("H").Value, 1);
 			this.Like_Count = (int)AdjustValue(row.Cell("I").Value, 1);
 			this.Quate_Count = (int)AdjustValue(row.Cell("J").Value, 1);
-			this.CreatedAtAutor = (DateTime)AdjustValue(row.Cell("K").Value, 2);
-			this.Name = (string)AdjustValue(row.Cell("L").Value, 0);
-			this.UserName = (string)AdjustValue(row.Cell("M").Value, 0);
-			//this.Text = (string)AdjustValue(row.Cell("N").Value, 0);
+			//this.Text = (string)AdjustValue(row.Cell("K").Value, 0);
+			this.UserName = (string)AdjustValue(row.Cell("L").Value, 0);
+			this.Name = (string)AdjustValue(row.Cell("M").Value, 0);
+			this.CreatedAtAutor = (DateTimeOffset)AdjustValue(row.Cell("N").Value, 2);
 			this.Description = (string)AdjustValue(row.Cell("O").Value, 0);
 			this.Follower_Count = (int)AdjustValue(row.Cell("P").Value, 1);
 			this.Follow_Count = (int)AdjustValue(row.Cell("Q").Value, 1);

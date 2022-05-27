@@ -206,6 +206,14 @@ def search_tweet(bearer_token, query, max_count, lang):
     # 冗長項目の削除
     df = df.drop_duplicates(subset=['text'])
     df3 = pd.merge(df, df2, left_on='author_id', right_on='id')
+
+
+    df3 = df3.loc[:,['id_x','created_at_x','text','lang',\
+        'author_id','public_metrics.retweet_count','public_metrics.reply_count',\
+        'public_metrics.like_count','public_metrics.quote_count','id_y','username',\
+        'name','created_at_y','description','public_metrics.followers_count',\
+        'public_metrics.following_count','public_metrics.tweet_count','public_metrics.listed_count']]
+
     return df, df2, df3
 
 
