@@ -72,13 +72,7 @@
         </Grid>
         <Grid Grid.Row="2">
             <GroupBox Header="ツイート内容">
-                <DataGrid ItemsSource="{Binding TweetItems.Items}">
-                    <DataGrid.Columns>
-                        <DataGridTextColumn Header="作者ID" Binding="{Binding Autor_Id}"/>
-                        <DataGridTextColumn Header="ツイートID" Binding="{Binding Id_X}"/>
-                        <DataGridTextColumn Header="ツイート内容" Binding="{Binding Text}"/>
-                    </DataGrid.Columns>
-                </DataGrid>
+                <DataGrid ItemsSource="{Binding TweetItems.Items}" IsReadOnly="True"/>
             </GroupBox>
         </Grid>
 

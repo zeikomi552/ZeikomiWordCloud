@@ -158,7 +158,7 @@ namespace ZeikomiWordCloud.ViewModels
                         config.BearerToken,
                         config.Outdir,
                         config.FontFilePath,
-                        this.Query,
+                        "\""+this.Query + "\"",
                         config.Language,
                         config.MaxgetCount);
 
@@ -223,6 +223,10 @@ namespace ZeikomiWordCloud.ViewModels
         }
         #endregion
 
+        #region ツイートデータ(Excel)を開く
+        /// <summary>
+        /// ツイートデータ(Excel)を開く
+        /// </summary>
         private void OpenTweetData()
         {
             try
@@ -244,18 +248,22 @@ namespace ZeikomiWordCloud.ViewModels
 
                             while(true)
                             {
+                                // nullチェック
                                 if (worksheet.Cell("B" + row.ToString()).Value == null ||
                                     worksheet.Cell("B" + row.ToString()).Value.ToString() == String.Empty)
                                 {
                                     break;
                                 }
+
+                                // 行データを登録
                                 var twdata = new TweetDataM(worksheet.Row(row));
                                 list.Add(twdata);
-                                row++;
+                                row++;  // 次の行へ
                             }
                         }
                     }
 
+                    // 画面上に描画
                     this.TweetItems.Items = new System.Collections.ObjectModel.ObservableCollection<TweetDataM>(list);
                 }
             }
@@ -264,7 +272,9 @@ namespace ZeikomiWordCloud.ViewModels
                 ShowMessage.ShowErrorOK(ex.Message, "Error");
             }
         }
+        #endregion
 
+        #region 名詞リストを開いて画面に表示する
         /// <summary>
         /// 名詞リストを開いて画面に表示する
         /// </summary>
@@ -318,6 +328,7 @@ namespace ZeikomiWordCloud.ViewModels
                 ShowMessage.ShowErrorOK(ex.Message, "Error");
             }
         }
+        #endregion
 
         #region 閉じる処理
         /// <summary>
