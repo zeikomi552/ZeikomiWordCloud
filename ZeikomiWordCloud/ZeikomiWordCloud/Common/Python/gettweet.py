@@ -7,13 +7,14 @@ from datetime import timedelta
 import emoji
 from janome.tokenizer import Tokenizer
 from wordcloud import WordCloud
-from collections import Counter, defaultdict
 from matplotlib import rcParams
 from matplotlib import cm
 import re
 import time
 import demoji
 import sys
+from collections import Counter, defaultdict
+import collections
 
 def remove_emoji(src_str):
     """絵文字の削除処理
@@ -150,6 +151,7 @@ def output_wordcloud(plane_text, font_path, output_dir):
     wordcloud.to_file(out_filepath)
     print(out_filepath)
 
+    return text
 
 def output_tweet_data(dir, query, df, df2, df3, plane_text):
     """ツイートデータの外部ファイル出力
@@ -245,4 +247,9 @@ if __name__ == '__main__':
     output_tweet_data(outdir, query, df, df2, df3, texts)
 
     # ワードクラウドデータの出力
-    output_wordcloud(texts, font_path, outdir)
+    result = output_wordcloud(texts, font_path, outdir)
+    result = result.split(" ")
+    result = collections.Counter(result).most_common()
+
+    # データフレームを作成
+    pd.DataFrame(result).to_excel(outdir + r'tweetdata\{}_result.xlsx'.format(query),sheet_name='data')
