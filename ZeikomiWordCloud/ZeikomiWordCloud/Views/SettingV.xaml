@@ -51,7 +51,7 @@
                         <Button Margin="5" Width="100" Content="選択">
                             <b:Interaction.Triggers>
                                 <b:EventTrigger EventName="Click">
-                                    <b:CallMethodAction TargetObject="{Binding}" MethodName="OpenFontFile"/>
+                                    <b:CallMethodAction TargetObject="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=Window}, Path=DataContext}" MethodName="OpenFileDialog" />
                                 </b:EventTrigger>
                             </b:Interaction.Triggers>
                         </Button>
@@ -65,6 +65,16 @@
                         <TextBlock Width="100" VerticalAlignment="Center" Margin="5" Text="API実行回数"/>
                         <TextBlock VerticalAlignment="Center" Margin="5" Text=":"/>
                         <TextBox Width="100" VerticalAlignment="Center" Margin="5" Text="{Binding MaxgetCount}"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Width="100" VerticalAlignment="Center" Margin="5" Text="背景色"/>
+                        <TextBlock VerticalAlignment="Center" Margin="5" Text=":"/>
+                        <TextBox Width="100" VerticalAlignment="Center" Margin="5" Text="{Binding Background}"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Width="100" VerticalAlignment="Center" Margin="5" Text="カラーマップ"/>
+                        <TextBlock VerticalAlignment="Center" Margin="5" Text=":"/>
+                        <TextBox Width="100" VerticalAlignment="Center" Margin="5" Text="{Binding ColorMap}"/>
                     </StackPanel>
                 </StackPanel>
             </TabItem>

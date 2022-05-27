@@ -179,13 +179,15 @@ namespace ZeikomiWordCloud.ViewModels
             {
                 var config = this.CommonValues.TwitterAPIConfig.Item;
 
-                string command = config.GettweetPythonPath + string.Format(" {0} {1} {2} {3} {4} {5} ",
-                        config.BearerToken,
-                        config.Outdir,
-                        config.FontFilePath,
-                        "\""+this.Query + "\"",
-                        config.Language,
-                        config.MaxgetCount);
+                string command = config.GettweetPythonPath + string.Format(" {0} {1} {2} {3} {4} {5} {6} {7}",
+                        "\"" + config.BearerToken + "\"",
+                        "\"" + config.Outdir + "\"",
+                        "\"" + config.FontFilePath + "\"",
+                        "\"" + this.Query + "\"",
+                        "\"" + config.Language + "\"",
+                        config.MaxgetCount,
+                         "\"" + config.Background + "\"",
+                         "\"" + config.ColorMap + "\"");
 
                 var myProcess = new Process
                 {

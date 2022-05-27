@@ -161,5 +161,57 @@ namespace ZeikomiWordCloud.Models
 			}
 		}
 		#endregion
+
+		#region カラーマップ[ColorMap]プロパティ
+		/// <summary>
+		/// カラーマップ[ColorMap]プロパティ用変数
+		/// </summary>
+		string _ColorMap = "bone";
+		/// <summary>
+		/// カラーマップ[ColorMap]プロパティ
+		/// </summary>
+		public string ColorMap
+		{
+			get
+			{
+				return _ColorMap;
+			}
+			set
+			{
+				if (_ColorMap == null || !_ColorMap.Equals(value))
+				{
+					_ColorMap = value;
+					NotifyPropertyChanged("ColorMap");
+				}
+			}
+		}
+		#endregion
+
+		#region 背景色[Background]プロパティ
+		/// <summary>
+		/// 背景色[Background]プロパティ用変数
+		/// </summary>
+		string _Background = "white";
+		/// <summary>
+		/// 背景色[Background]プロパティ
+		/// </summary>
+		public string Background
+		{
+			get
+			{
+				return _Background;
+			}
+			set
+			{
+				if (_Background == null || !_Background.Equals(value))
+				{
+					_Background = value;
+					NotifyPropertyChanged("Background");
+				}
+			}
+		}
+		#endregion
+
+
 	}
 }

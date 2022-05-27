@@ -134,7 +134,7 @@ def get_planetext(text_list):
     texts = texts.replace("amp","")
     return texts
 
-def output_wordcloud(plane_text, font_path, output_dir):
+def output_wordcloud(plane_text, font_path, output_dir, bgcolor, colormap):
     """プレーンのテキストからワードクラウドを作成する
 
     Args:
@@ -145,7 +145,7 @@ def output_wordcloud(plane_text, font_path, output_dir):
 
     text = get_word_str(plane_text)
 
-    wordcloud = WordCloud(background_color="white", font_path=font_path, width=900, height=500,collocations=False,).generate(text)
+    wordcloud = WordCloud(background_color=bgcolor, font_path=font_path, width=900, height=500,collocations=False, colormap=colormap).generate(text)
 
     out_filepath = output_dir + '{}_wordcloud.png'.format(query)
     wordcloud.to_file(out_filepath)
@@ -227,6 +227,8 @@ if __name__ == '__main__':
         args[4]: クエリ
         args[5]: all, jp, en
         args[6]: 取得最大数
+        args[7]: 背景色
+        args[8]: カラーマップ
 
     """
 
@@ -238,6 +240,8 @@ if __name__ == '__main__':
     query = args[4]
     lang = args[5]
     max_count = int(args[6])
+    bgcolor = str(args[7])
+    colormap = str(args[8])
 
     # 絵文字コードの取得
     demoji.download_codes()
@@ -255,7 +259,7 @@ if __name__ == '__main__':
     output_tweet_data(outdir, query, df, df2, df3, texts)
 
     # ワードクラウドデータの出力
-    result = output_wordcloud(texts, font_path, outdir)
+    result = output_wordcloud(texts, font_path, outdir, bgcolor, colormap)
     result = result.split(" ")
     result = collections.Counter(result).most_common()
 

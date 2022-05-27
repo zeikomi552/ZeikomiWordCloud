@@ -1,4 +1,5 @@
-﻿using MVVMCore.BaseClass;
+﻿using Microsoft.Win32;
+using MVVMCore.BaseClass;
 using MVVMCore.Common.Utilities;
 using System;
 using System.Collections.Generic;
@@ -77,6 +78,30 @@ namespace ZeikomiWordCloud.ViewModels
             }
         }
         #endregion
+
+        public void OpenFileDialog()
+        {
+            try
+            {
+                // ダイアログのインスタンスを生成
+                var dialog = new OpenFileDialog();
+
+                // ファイルの種類を設定
+                dialog.Filter = "テキストファイル (*.ttf)|*.ttf";
+                
+
+                // ダイアログを表示する
+                if (dialog.ShowDialog() == true)
+                {
+                    // 選択されたファイル名 (ファイルパス) をメッセージボックスに表示
+                    this.CommonValues.TwitterAPIConfig.Item.FontFilePath = dialog.FileName;
+                }
+            }
+            catch (Exception ex)
+            {
+                ShowMessage.ShowErrorOK(ex.Message, "Error");
+            }
+        }
 
         #region クローズ
         /// <summary>
