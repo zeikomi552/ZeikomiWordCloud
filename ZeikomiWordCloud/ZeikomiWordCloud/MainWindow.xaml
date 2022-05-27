@@ -79,7 +79,13 @@
             <Grid Grid.Column="2">
                 <GroupBox Header="検索履歴">
                     <DataGrid IsReadOnly="False" 
-                              ItemsSource="{Binding SearchHistory.Items}" SelectedItem="{Binding SearchHistory.SelectedItem}"/>
+                              ItemsSource="{Binding SearchHistory.Items}" SelectedItem="{Binding SearchHistory.SelectedItem}">
+                        <b:Interaction.Triggers>
+                            <b:EventTrigger EventName="SelectionChanged">
+                                <b:CallMethodAction MethodName="HistoryChanged" TargetObject="{Binding}"/>
+                            </b:EventTrigger>
+                        </b:Interaction.Triggers>
+                    </DataGrid>
                 </GroupBox>
             </Grid>
         </Grid>

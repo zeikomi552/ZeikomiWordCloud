@@ -210,13 +210,16 @@ namespace ZeikomiWordCloud.ViewModels
                 this.ImagePath = image_path;
 
                 // 名詞リストの読み込み
-                OpenNounCount();
+                OpenNounCount(this.Query);
 
                 // ツイートデータの読み込み
-                OpenTweetData();
+                OpenTweetData(this.Query);
 
                 // 検索履歴に追加
                 this.SearchHistory.Items.Insert(0,new SearchHistoryM(this.Query, new DateTimeOffset(DateTime.Now)));
+
+                // 最初の行を選択する
+                this.SearchHistory.SelectedItem = this.SearchHistory.Items.First();
             }
             catch (Exception ex)
             {
@@ -255,12 +258,13 @@ namespace ZeikomiWordCloud.ViewModels
         /// <summary>
         /// ツイートデータ(Excel)を開く
         /// </summary>
-        private void OpenTweetData()
+        /// <param name="query">クエリ(検索キーワード)</param>
+        private void OpenTweetData(string query)
         {
             try
             {
                 var config = this.CommonValues.TwitterAPIConfig.Item;
-                string noun_result_xlsx = Path.Combine(config.Outdir, String.Format(@"tweetdata\{0}_merge.xlsx", this.Query));
+                string noun_result_xlsx = Path.Combine(config.Outdir, String.Format(@"tweetdata\{0}_merge.xlsx", query));
 
                 // ファイルストリームで開く（他のプロセスで握られている時用）
                 using (FileStream fs = new FileStream(noun_result_xlsx, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
@@ -355,12 +359,13 @@ namespace ZeikomiWordCloud.ViewModels
         /// <summary>
         /// 名詞リストを開いて画面に表示する
         /// </summary>
-        private void OpenNounCount()
+        /// <param name="query">クエリ(検索キーワード)</param>
+        private void OpenNounCount(string query)
         {
             try
             {
                 var config = this.CommonValues.TwitterAPIConfig.Item;
-                string noun_result_xlsx = Path.Combine(config.Outdir, String.Format(@"tweetdata\{0}_result.xlsx", this.Query));
+                string noun_result_xlsx = Path.Combine(config.Outdir, String.Format(@"tweetdata\{0}_result.xlsx", query));
 
                 // ファイルストリームで開く（他のプロセスで握られている時用）
                 using (FileStream fs = new FileStream(noun_result_xlsx, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
@@ -403,6 +408,39 @@ namespace ZeikomiWordCloud.ViewModels
             catch (Exception ex)
             {
                 ShowMessage.ShowErrorOK(ex.Message, "Error");
+            }
+        }
+        #endregion
+
+        #region 検索履歴の選択が変わった際の処理
+        /// <summary>
+        /// 検索履歴の選択が変わった際の処理
+        /// </summary>
+        public void HistoryChanged()
+        {
+            try
+            {
+                if (this.SearchHistory != null && this.SearchHistory.SelectedItem != null)
+                {
+                    string query = SearchHistory.SelectedItem.Query;
+                    var config = this.CommonValues.TwitterAPIConfig.Item;
+                    string image_path = Path.Combine(config.Outdir, String.Format("{0}_wordcloud.png", query));
+                    // 画像ファイルのセット
+                    this.ImagePath = image_path;
+
+                    // 名詞リストの読み込み
+                    OpenNounCount(query);
+
+                    // ツイートデータの読み込み
+                    OpenTweetData(query);
+
+                    // 検索キーワードも入れ替える
+                    this.Query = query;
+                }
+            }
+            catch (Exception e)
+            {
+                ShowMessage.ShowErrorOK(e.Message, "Error");
             }
         }
         #endregion
