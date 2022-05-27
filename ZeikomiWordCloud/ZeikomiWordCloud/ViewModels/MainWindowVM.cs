@@ -149,6 +149,71 @@ namespace ZeikomiWordCloud.ViewModels
         }
         #endregion
 
+        #region フィルター後のツイッター検索結果[TwitterItemsFilter]プロパティ
+        /// <summary>
+        /// フィルター後のツイッター検索結果[TwitterItemsFilter]プロパティ用変数
+        /// </summary>
+        ModelList<TweetDataM> _TwitterItemsFilter = new ModelList<TweetDataM>();
+        /// <summary>
+        /// フィルター後のツイッター検索結果[TwitterItemsFilter]プロパティ
+        /// </summary>
+        public ModelList<TweetDataM> TwitterItemsFilter
+        {
+            get
+            {
+                return _TwitterItemsFilter;
+            }
+            set
+            {
+                if (_TwitterItemsFilter == null || !_TwitterItemsFilter.Equals(value))
+                {
+                    _TwitterItemsFilter = value;
+                    NotifyPropertyChanged("TwitterItemsFilter");
+                }
+            }
+        }
+        #endregion
+
+        #region 検索結果のフィルター[Filter]プロパティ
+        /// <summary>
+        /// 検索結果のフィルター[Filter]プロパティ用変数
+        /// </summary>
+        string _Filter = string.Empty;
+        /// <summary>
+        /// 検索結果のフィルター[Filter]プロパティ
+        /// </summary>
+        public string Filter
+        {
+            get
+            {
+                return _Filter;
+            }
+            set
+            {
+                if (_Filter == null || !_Filter.Equals(value))
+                {
+                    _Filter = value;
+                    NotifyPropertyChanged("Filter");
+
+                    // nullチェック
+                    if (!String.IsNullOrEmpty(this.Filter))
+                    {
+                        var tmp = (from x in this.TweetItems.Items
+                                   where x.Text.Contains(this.Filter) || x.Description.Contains(this.Filter)
+                                   select x).ToList<TweetDataM>();
+
+                        this.TwitterItemsFilter.Items = new System.Collections.ObjectModel.ObservableCollection<TweetDataM>(tmp);
+                    }
+                    else
+                    {
+                        this.TwitterItemsFilter.Items = new System.Collections.ObjectModel.ObservableCollection<TweetDataM>(this.TweetItems.Items);
+                    }
+                }
+            }
+        }
+        #endregion
+
+
 
         #region 初期化処理
         /// <summary>
@@ -222,6 +287,9 @@ namespace ZeikomiWordCloud.ViewModels
 
                 // 最初の行を選択する
                 this.SearchHistory.SelectedItem = this.SearchHistory.Items.First();
+
+                // フィルタの解除
+                this.Filter = String.Empty;
             }
             catch (Exception ex)
             {
@@ -229,6 +297,25 @@ namespace ZeikomiWordCloud.ViewModels
             }
         }
         #endregion
+
+        public void FilterChanged()
+        {
+            try
+            {
+                if (this.NounLists != null && this.NounLists.SelectedItem != null)
+                {
+                    this.Filter = this.NounLists.SelectedItem.Noun!;
+                }
+                else
+                {
+                    this.Filter = String.Empty;
+                }
+            }
+            catch (Exception ex)
+            {
+                ShowMessage.ShowErrorOK(ex.Message, "Error");
+            }
+        }
 
         #region 設定画面を開く処理
         /// <summary>
@@ -336,10 +423,10 @@ namespace ZeikomiWordCloud.ViewModels
         {
             try
             {
-                if (this.TweetItems != null && this.TweetItems.SelectedItem != null)
+                if (this.TwitterItemsFilter != null && this.TwitterItemsFilter.SelectedItem != null)
                 {
                     string url = String.Format("https://twitter.com/{0}/status/{1}",
-                        this.TweetItems.SelectedItem.UserName, this.TweetItems.SelectedItem.Id_X);
+                        this.TwitterItemsFilter.SelectedItem.UserName, this.TwitterItemsFilter.SelectedItem.Id_X);
 
                     ProcessStartInfo pi = new ProcessStartInfo()
                     {
