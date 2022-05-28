@@ -13,6 +13,7 @@
     <Window.DataContext>
         <ViewModels:MainWindowVM/>
     </Window.DataContext>
+
     <b:Interaction.Triggers>
         <b:EventTrigger EventName="Loaded">
             <b:CallMethodAction TargetObject="{Binding}" MethodName="Init"/>
@@ -21,89 +22,96 @@
             <b:CallMethodAction TargetObject="{Binding}" MethodName="Close"/>
         </b:EventTrigger>
     </b:Interaction.Triggers>
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
-        <StackPanel Orientation="Horizontal">
-            <StackPanel Orientation="Horizontal">
-                <TextBlock Width="100" VerticalAlignment="Center" Margin="5" Text="検索キーワード"/>
-                <TextBlock VerticalAlignment="Center" Margin="5" Text=":"/>
-                <TextBox Width="200" VerticalAlignment="Center" Margin="5" Text="{Binding Query}"/>
-            </StackPanel>
-            <StackPanel Orientation="Horizontal">
-                <Button Margin="5" Content="実行" Width="100">
-                    <b:Interaction.Triggers>
-                        <b:EventTrigger EventName="Click">
-                            <b:CallMethodAction TargetObject="{Binding}" MethodName="Execute"/>
-                        </b:EventTrigger>
-                    </b:Interaction.Triggers>
-                </Button>
-                <Button Margin="5" Content="設定" Width="100">
+
+    <DockPanel>
+        <Menu DockPanel.Dock="Top">
+            <MenuItem Header="設定(_S)">
+                <MenuItem Header="設定画面">
                     <b:Interaction.Triggers>
                         <b:EventTrigger EventName="Click">
                             <b:CallMethodAction TargetObject="{Binding}" MethodName="OpenSetting"/>
                         </b:EventTrigger>
                     </b:Interaction.Triggers>
-                </Button>
-            </StackPanel>
-        </StackPanel>
-        <Grid Grid.Row="1">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition MinWidth="150" Width="auto"/>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition MinWidth="150" Width="auto"/>
-            </Grid.ColumnDefinitions>
-            <GroupBox Header="名詞">
-                <DataGrid IsReadOnly="True" AutoGenerateColumns="False" ItemsSource="{Binding NounLists.Items}"
-                          SelectedItem="{Binding NounLists.SelectedItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
-                    <DataGrid.Columns>
-                        <DataGridTextColumn Header="名詞" Binding="{Binding Noun}" Width="auto"/>
-                        <DataGridTextColumn Header="出現回数" Binding="{Binding Count}"/>
-                    </DataGrid.Columns>
-                    <b:Interaction.Triggers>
-                        <b:EventTrigger EventName="MouseDoubleClick">
-                            <b:CallMethodAction MethodName="NounCountRowDoubleClick" TargetObject="{Binding}"/>
-                        </b:EventTrigger>
-                        <b:EventTrigger EventName="SelectionChanged">
-                            <b:CallMethodAction MethodName="FilterChanged" TargetObject="{Binding}"/>
-                        </b:EventTrigger>
-                    </b:Interaction.Triggers>
-                </DataGrid>
-            </GroupBox>
-            <Grid Grid.Column="1">
-                <GroupBox Header="ワードクラウド">
-                    <Image Margin="5" Source="{Binding ImagePath, Converter={StaticResource StringToImageSourceConverter}}"/>
-                </GroupBox>
-            </Grid>
-
-            <Grid Grid.Column="2">
-                <GroupBox Header="検索履歴">
-                    <DataGrid IsReadOnly="False" 
-                              ItemsSource="{Binding SearchHistory.Items}" SelectedItem="{Binding SearchHistory.SelectedItem}">
+                </MenuItem>
+            </MenuItem>
+        </Menu>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <StackPanel Orientation="Horizontal">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Width="100" VerticalAlignment="Center" Margin="5" Text="検索キーワード"/>
+                    <TextBlock VerticalAlignment="Center" Margin="5" Text=":"/>
+                    <TextBox Width="200" VerticalAlignment="Center" Margin="5" Text="{Binding Query}"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Button Margin="5" Content="実行" Width="100">
                         <b:Interaction.Triggers>
+                            <b:EventTrigger EventName="Click">
+                                <b:CallMethodAction TargetObject="{Binding}" MethodName="Execute"/>
+                            </b:EventTrigger>
+                        </b:Interaction.Triggers>
+                    </Button>
+                </StackPanel>
+            </StackPanel>
+            <Grid Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition MinWidth="150" Width="auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition MinWidth="150" Width="auto"/>
+                </Grid.ColumnDefinitions>
+                <GroupBox Header="名詞">
+                    <DataGrid IsReadOnly="True" AutoGenerateColumns="False" ItemsSource="{Binding NounLists.Items}"
+                          SelectedItem="{Binding NounLists.SelectedItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="名詞" Binding="{Binding Noun}" Width="auto"/>
+                            <DataGridTextColumn Header="出現回数" Binding="{Binding Count}"/>
+                        </DataGrid.Columns>
+                        <b:Interaction.Triggers>
+                            <b:EventTrigger EventName="MouseDoubleClick">
+                                <b:CallMethodAction MethodName="NounCountRowDoubleClick" TargetObject="{Binding}"/>
+                            </b:EventTrigger>
                             <b:EventTrigger EventName="SelectionChanged">
-                                <b:CallMethodAction MethodName="HistoryChanged" TargetObject="{Binding}"/>
+                                <b:CallMethodAction MethodName="FilterChanged" TargetObject="{Binding}"/>
+                            </b:EventTrigger>
+                        </b:Interaction.Triggers>
+                    </DataGrid>
+                </GroupBox>
+                <Grid Grid.Column="1">
+                    <GroupBox Header="ワードクラウド">
+                        <Image Margin="5" Source="{Binding ImagePath, Converter={StaticResource StringToImageSourceConverter}}"/>
+                    </GroupBox>
+                </Grid>
+
+                <Grid Grid.Column="2">
+                    <GroupBox Header="検索履歴">
+                        <DataGrid IsReadOnly="False" 
+                              ItemsSource="{Binding SearchHistory.Items}" SelectedItem="{Binding SearchHistory.SelectedItem}">
+                            <b:Interaction.Triggers>
+                                <b:EventTrigger EventName="SelectionChanged">
+                                    <b:CallMethodAction MethodName="HistoryChanged" TargetObject="{Binding}"/>
+                                </b:EventTrigger>
+                            </b:Interaction.Triggers>
+                        </DataGrid>
+                    </GroupBox>
+                </Grid>
+            </Grid>
+            <Grid Grid.Row="2">
+                <GroupBox Header="ツイート内容">
+                    <DataGrid ItemsSource="{Binding TwitterItemsFilter.Items}" 
+                          SelectedItem="{Binding TwitterItemsFilter.SelectedItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True">
+                        <b:Interaction.Triggers>
+                            <b:EventTrigger EventName="MouseDoubleClick">
+                                <b:CallMethodAction MethodName="TwitterRowDoubleClick" TargetObject="{Binding}"/>
                             </b:EventTrigger>
                         </b:Interaction.Triggers>
                     </DataGrid>
                 </GroupBox>
             </Grid>
-        </Grid>
-        <Grid Grid.Row="2">
-            <GroupBox Header="ツイート内容">
-                <DataGrid ItemsSource="{Binding TwitterItemsFilter.Items}" 
-                          SelectedItem="{Binding TwitterItemsFilter.SelectedItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True">
-                    <b:Interaction.Triggers>
-                        <b:EventTrigger EventName="MouseDoubleClick">
-                            <b:CallMethodAction MethodName="TwitterRowDoubleClick" TargetObject="{Binding}"/>
-                        </b:EventTrigger>
-                    </b:Interaction.Triggers>
-                </DataGrid>
-            </GroupBox>
-        </Grid>
 
-    </Grid>
+        </Grid>
+    </DockPanel>
 </Window>
