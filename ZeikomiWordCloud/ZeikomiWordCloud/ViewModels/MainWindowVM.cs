@@ -194,20 +194,6 @@ namespace ZeikomiWordCloud.ViewModels
                 {
                     _Filter = value;
                     NotifyPropertyChanged("Filter");
-
-                    // nullチェック
-                    if (!String.IsNullOrEmpty(this.Filter))
-                    {
-                        var tmp = (from x in this.TweetItems.Items
-                                   where x.Text.Contains(this.Filter) || x.Description.Contains(this.Filter)
-                                   select x).ToList<TweetDataM>();
-
-                        this.TwitterItemsFilter.Items = new System.Collections.ObjectModel.ObservableCollection<TweetDataM>(tmp);
-                    }
-                    else
-                    {
-                        this.TwitterItemsFilter.Items = new System.Collections.ObjectModel.ObservableCollection<TweetDataM>(this.TweetItems.Items);
-                    }
                 }
             }
         }
@@ -272,31 +258,11 @@ namespace ZeikomiWordCloud.ViewModels
                 // 検索履歴に追加
                 this.SearchHistory.Items.Insert(0, new SearchHistoryM(this.Query, new DateTimeOffset(DateTime.Now)));
 
-
-                // WordCloudによる画像ファイルの作成
-                ExecuteWordCloud(Path.Combine(config.Outdir, "planetext", $"{this.Query}_tweet.txt"), this.Query);
-
-
-                // 0以上
-                if (this.SearchHistory.Items.Count > 0)
-                    // 最初の行を選択する
-                    this.SearchHistory.SelectedItem = this.SearchHistory.Items.First();
-
-                // フィルタの解除
-                this.Filter = String.Empty;
-
                 // ツイートデータの読み込み
                 OpenTweetData(this.Query);
 
-                //// 検索履歴に追加
-                //this.SearchHistory.Items.Insert(0,new SearchHistoryM(this.Query, new DateTimeOffset(DateTime.Now)));
-
-                //// 最初の行を選択する
-                //this.SearchHistory.SelectedItem = this.SearchHistory.Items.First();
-
-                //// フィルタの解除
-                //this.Filter = String.Empty;
-
+                // WordCloudによる画像ファイルの作成
+                ExecuteWordCloud(Path.Combine(config.Outdir, "planetext", $"{this.Query}_tweet.txt"), this.Query);
             }
             catch (Exception ex)
             {
@@ -349,8 +315,12 @@ namespace ZeikomiWordCloud.ViewModels
                 // 画像ファイルのセット
                 this.ImagePath = image_path;
 
+
                 // 名詞リストの読み込み
                 OpenNounCount(keyword);
+
+                this.Filter = String.Empty;
+                FilterChanged();
             }
             catch (Exception ex)
             {
@@ -370,10 +340,17 @@ namespace ZeikomiWordCloud.ViewModels
                 if (this.NounLists != null && this.NounLists.SelectedItem != null)
                 {
                     this.Filter = this.NounLists.SelectedItem.Noun!;
+
+                    var tmp = (from x in this.TweetItems.Items
+                               where x.Text.Contains(this.Filter) || x.Description.Contains(this.Filter)
+                               select x).ToList<TweetDataM>();
+
+                    this.TwitterItemsFilter.Items = new System.Collections.ObjectModel.ObservableCollection<TweetDataM>(tmp);
                 }
                 else
                 {
                     this.Filter = String.Empty;
+                    this.TwitterItemsFilter.Items = new System.Collections.ObjectModel.ObservableCollection<TweetDataM>(this.TweetItems.Items);
                 }
             }
             catch (Exception ex)
@@ -453,8 +430,6 @@ namespace ZeikomiWordCloud.ViewModels
 
                     // 画面上に描画
                     this.TweetItems.Items = new System.Collections.ObjectModel.ObservableCollection<TweetDataM>(list);
-                    NotifyPropertyChanged("TwitterItemsFilter");
-
                 }
             }
             catch (Exception ex)

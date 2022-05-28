@@ -94,7 +94,7 @@
         </Grid>
         <Grid Grid.Row="2">
             <GroupBox Header="ツイート内容">
-                <DataGrid ItemsSource="{Binding TwitterItemsFilter.Items, Mode=OneWay}" 
+                <DataGrid ItemsSource="{Binding TwitterItemsFilter.Items}" 
                           SelectedItem="{Binding TwitterItemsFilter.SelectedItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True">
                     <b:Interaction.Triggers>
                         <b:EventTrigger EventName="MouseDoubleClick">
