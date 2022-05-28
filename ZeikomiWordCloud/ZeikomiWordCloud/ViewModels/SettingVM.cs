@@ -34,7 +34,15 @@ namespace ZeikomiWordCloud.ViewModels
         /// <param name="e"></param>
         public override void Init(object sender, EventArgs e)
         {
-            this.CommonValues.TwitterAPIConfig.LoadXML();
+            try
+            {
+                this.CommonValues.TwitterAPIConfig.LoadXML();
+                this.CommonValues.WordCloudConfig.LoadXML();
+            }
+            catch (Exception ex)
+            {
+                ShowMessage.ShowErrorOK(ex.Message, "Error");
+            }
         }
         #endregion
 
@@ -49,6 +57,7 @@ namespace ZeikomiWordCloud.ViewModels
                 if (ShowMessage.ShowQuestionYesNo("保存した後に画面を閉じます。よろしいですか？", "確認") == System.Windows.MessageBoxResult.Yes)
                 {
                     this.CommonValues.TwitterAPIConfig.SaveXML();
+                    this.CommonValues.WordCloudConfig.SaveXML();
                     this.DialogResult = true;
                 }
             }
@@ -94,7 +103,7 @@ namespace ZeikomiWordCloud.ViewModels
                 if (dialog.ShowDialog() == true)
                 {
                     // 選択されたファイル名 (ファイルパス) をメッセージボックスに表示
-                    this.CommonValues.TwitterAPIConfig.Item.FontFilePath = dialog.FileName;
+                    this.CommonValues.WordCloudConfig.Item.FontFilePath = dialog.FileName;
                 }
             }
             catch (Exception ex)

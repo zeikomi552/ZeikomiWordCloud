@@ -9,7 +9,7 @@
         xmlns:local="clr-namespace:ZeikomiWordCloud.Views"
         xmlns:ViewModels="clr-namespace:ZeikomiWordCloud.ViewModels" xmlns:b="http://schemas.microsoft.com/xaml/behaviors" x:Class="ZeikomiWordCloud.Views.SettingV"
         mc:Ignorable="d"
-        Title="SettingV" Height="450" Width="800" hlp:DialogResultHelper.DialogResult="{Binding DialogResult, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+        Title="設定画面" Height="450" Width="800" hlp:DialogResultHelper.DialogResult="{Binding DialogResult, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
     <Window.Resources>
         <ObjectDataProvider MethodName="GetValues" ObjectType="{x:Type sys:Enum}" x:Key="ColormapValues">
             <ObjectDataProvider.MethodParameters>
@@ -54,6 +54,21 @@
                         <TextBox Width="500" VerticalAlignment="Center" Margin="5" Text="{Binding Outdir}"/>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
+                        <TextBlock Width="100" VerticalAlignment="Center" Margin="5" Text="言語"/>
+                        <TextBlock VerticalAlignment="Center" Margin="5" Text=":"/>
+                        <TextBox Width="100" VerticalAlignment="Center" Margin="5" Text="{Binding Language}"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Width="100" VerticalAlignment="Center" Margin="5" Text="API実行回数"/>
+                        <TextBlock VerticalAlignment="Center" Margin="5" Text=":"/>
+                        <TextBox Width="100" VerticalAlignment="Center" Margin="5" Text="{Binding MaxgetCount}"/>
+                    </StackPanel>
+                </StackPanel>
+            </TabItem>
+            <TabItem Header="WordCloud" DataContext="{Binding CommonValues.WordCloudConfig.Item}">
+                <StackPanel>
+
+                    <StackPanel Orientation="Horizontal">
                         <TextBlock Width="100" VerticalAlignment="Center" Margin="5" Text="フォントパス"/>
                         <TextBlock VerticalAlignment="Center" Margin="5" Text=":"/>
                         <TextBox Width="500" VerticalAlignment="Center" Margin="5" Text="{Binding FontFilePath}"/>
@@ -65,16 +80,7 @@
                             </b:Interaction.Triggers>
                         </Button>
                     </StackPanel>
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock Width="100" VerticalAlignment="Center" Margin="5" Text="言語"/>
-                        <TextBlock VerticalAlignment="Center" Margin="5" Text=":"/>
-                        <TextBox Width="100" VerticalAlignment="Center" Margin="5" Text="{Binding Language}"/>
-                    </StackPanel>
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock Width="100" VerticalAlignment="Center" Margin="5" Text="API実行回数"/>
-                        <TextBlock VerticalAlignment="Center" Margin="5" Text=":"/>
-                        <TextBox Width="100" VerticalAlignment="Center" Margin="5" Text="{Binding MaxgetCount}"/>
-                    </StackPanel>
+
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Width="100" VerticalAlignment="Center" Margin="5" Text="背景色"/>
                         <TextBlock VerticalAlignment="Center" Margin="5" Text=":"/>

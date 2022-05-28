@@ -1,47 +1,8 @@
-import requests
 import os
+import sys
+import requests
 import pandas as pd
 from pandas import json_normalize
-import datetime
-from datetime import timedelta
-import emoji
-from janome.tokenizer import Tokenizer
-from wordcloud import WordCloud
-from matplotlib import rcParams
-from matplotlib import cm
-import re
-import time
-import demoji
-import sys
-from collections import Counter, defaultdict
-import collections
-
-def remove_emoji(src_str):
-    """絵文字の削除処理
-
-    Args:
-        src_str (string): 元の文字列
-
-    Returns:
-        string: 絵文字を取り除いた文字列
-    """
-    return demoji.replace(string=src_str, repl="")
-
-def get_word_str(text):
- 
-    t = Tokenizer()
-    token = t.tokenize(text)
-    word_list = []
- 
-    for line in token:
-        tmp = re.split('\t|,', str(line))
-        # 名詞のみ対象
-        if tmp[1] in ["名詞"]:
-            # さらに絞り込み
-            if tmp[2] in ["一般", "固有名詞"]:
-                word_list.append(tmp[0])
-
-    return " " . join(word_list)
 
 def get_recent_tweet(bearer_token, query, max_count, lang):
     """最近(直近7日間)のツイートを取得
@@ -122,36 +83,9 @@ def get_planetext(text_list):
     texts = ""
 
     for index, row in text_list.items():
-        try:
-            texts = texts + remove_emoji(row) + '\n'
-        except Exception as e:
-            print('message:' + e.message)
-            print("error:{}行目\r\n内容:{}".format(index, row))
+        texts = texts + row + '\n'
 
-    texts = re.sub(r"(https?|ftp)(:\/\/[-_\.!~*\'()a-zA-Z0-9;\/?:\@&=\+\$,%#]+)", "" ,texts)
-    texts = texts.replace("tco","")
-    texts = texts.replace("RT","")
-    texts = texts.replace("amp","")
     return texts
-
-def output_wordcloud(plane_text, font_path, output_dir, bgcolor, colormap):
-    """プレーンのテキストからワードクラウドを作成する
-
-    Args:
-        plane_text (string): プレーンテキスト
-        font_path (string): フォントファイルのパス
-        output_dir (string): 出力先フォルダ
-    """
-
-    text = get_word_str(plane_text)
-
-    wordcloud = WordCloud(background_color=bgcolor, font_path=font_path, width=900, height=500,collocations=False, colormap=colormap).generate(text)
-
-    out_filepath = output_dir + '{}_wordcloud.png'.format(query)
-    wordcloud.to_file(out_filepath)
-    print(out_filepath)
-
-    return text
 
 def output_tweet_data(dir, query, df, df2, df3, plane_text):
     """ツイートデータの外部ファイル出力
@@ -218,17 +152,14 @@ def search_tweet(bearer_token, query, max_count, lang):
 
 
 if __name__ == '__main__':
-    """メイン処理:ツイッターAPIでツイートを検索し取得結果をファイル出力する。またWordCloudで暫定結果を出力する。
+    """メイン処理:ツイッターAPIでツイートを検索し取得結果をファイル出力する。
 
     Args:
         args[1]: ツイッターAPI BearerToken
         args[2]: 出力ディレクトリ(末尾に\をつけない)
-        args[3]: フォントファイルのパス.ttf
-        args[4]: クエリ
-        args[5]: all, jp, en
-        args[6]: 取得最大数
-        args[7]: 背景色
-        args[8]: カラーマップ
+        args[3]: クエリ
+        args[4]: all, jp, en
+        args[5]: 取得最大数
 
     """
 
@@ -236,15 +167,9 @@ if __name__ == '__main__':
 
     bearer_token = args[1]
     outdir = args[2] + "\\"
-    font_path = args[3]
-    query = args[4]
-    lang = args[5]
-    max_count = int(args[6])
-    bgcolor = str(args[7])
-    colormap = str(args[8])
-
-    # 絵文字コードの取得
-    demoji.download_codes()
+    query = args[3]
+    lang = args[4]
+    max_count = int(args[5])
 
     # ログ表示
     print(query)
@@ -257,11 +182,3 @@ if __name__ == '__main__':
 
     # 各種データの出力
     output_tweet_data(outdir, query, df, df2, df3, texts)
-
-    # ワードクラウドデータの出力
-    result = output_wordcloud(texts, font_path, outdir, bgcolor, colormap)
-    result = result.split(" ")
-    result = collections.Counter(result).most_common()
-
-    # データフレームを作成
-    pd.DataFrame(result).to_excel(outdir + r'tweetdata\{}_result.xlsx'.format(query),sheet_name='data')

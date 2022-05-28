@@ -213,8 +213,6 @@ namespace ZeikomiWordCloud.ViewModels
         }
         #endregion
 
-
-
         #region 初期化処理
         /// <summary>
         /// 初期化処理
@@ -226,6 +224,7 @@ namespace ZeikomiWordCloud.ViewModels
             try
             {
                 this.CommonValues.TwitterAPIConfig.LoadXML();
+                this.CommonValues.WordCloudConfig.LoadXML();
             }
             catch (Exception ex)
             {
@@ -244,15 +243,12 @@ namespace ZeikomiWordCloud.ViewModels
             {
                 var config = this.CommonValues.TwitterAPIConfig.Item;
 
-                string command = config.GettweetPythonPath + string.Format(" {0} {1} {2} {3} {4} {5} {6} {7}",
+                string command = config.GettweetPythonPath + string.Format(" {0} {1} {2} {3} {4}",
                         "\"" + config.BearerToken + "\"",
                         "\"" + config.Outdir + "\"",
-                        "\"" + config.FontFilePath + "\"",
                         "\"" + this.Query + "\"",
                         "\"" + config.Language + "\"",
-                        config.MaxgetCount,
-                         "\"" + config.Background + "\"",
-                         "\"" + config.ColorMap.ToString() + "\"");
+                        config.MaxgetCount);
 
                 var myProcess = new Process
                 {
@@ -270,26 +266,37 @@ namespace ZeikomiWordCloud.ViewModels
                 string? myString = myStreamReader.ReadLine();
                 myProcess.WaitForExit();
                 myProcess.Close();
+
                 Console.WriteLine(myString);
 
-                string image_path = Path.Combine(config.Outdir, String.Format("{0}_wordcloud.png", this.Query));
-                // 画像ファイルのセット
-                this.ImagePath = image_path;
+                // 検索履歴に追加
+                this.SearchHistory.Items.Insert(0, new SearchHistoryM(this.Query, new DateTimeOffset(DateTime.Now)));
 
-                // 名詞リストの読み込み
-                OpenNounCount(this.Query);
+
+                // WordCloudによる画像ファイルの作成
+                ExecuteWordCloud(Path.Combine(config.Outdir, "planetext", $"{this.Query}_tweet.txt"), this.Query);
+
+
+                // 0以上
+                if (this.SearchHistory.Items.Count > 0)
+                    // 最初の行を選択する
+                    this.SearchHistory.SelectedItem = this.SearchHistory.Items.First();
+
+                // フィルタの解除
+                this.Filter = String.Empty;
 
                 // ツイートデータの読み込み
                 OpenTweetData(this.Query);
 
-                // 検索履歴に追加
-                this.SearchHistory.Items.Insert(0,new SearchHistoryM(this.Query, new DateTimeOffset(DateTime.Now)));
+                //// 検索履歴に追加
+                //this.SearchHistory.Items.Insert(0,new SearchHistoryM(this.Query, new DateTimeOffset(DateTime.Now)));
 
-                // 最初の行を選択する
-                this.SearchHistory.SelectedItem = this.SearchHistory.Items.First();
+                //// 最初の行を選択する
+                //this.SearchHistory.SelectedItem = this.SearchHistory.Items.First();
 
-                // フィルタの解除
-                this.Filter = String.Empty;
+                //// フィルタの解除
+                //this.Filter = String.Empty;
+
             }
             catch (Exception ex)
             {
@@ -298,6 +305,64 @@ namespace ZeikomiWordCloud.ViewModels
         }
         #endregion
 
+        #region WordCloudのPython実行処理
+        /// <summary>
+        /// WordCloudのPython実行処理
+        /// </summary>
+        /// <param name="input_file_path">入力ファイルパス</param>
+        /// <param name="keyword">キーワード</param>
+        public void ExecuteWordCloud(string input_file_path, string keyword)
+        {
+            try
+            {
+                var config = this.CommonValues.WordCloudConfig.Item;
+                var config2 = this.CommonValues.TwitterAPIConfig.Item;
+
+                string command = config.WordCloudPythonPath + string.Format(" {0} {1} {2} {3} {4} {5}",
+                                    "\"" + input_file_path + "\"",
+                                    "\"" + config.FontFilePath + "\"",
+                                    "\"" + config.Background + "\"",
+                                    "\"" + config.ColorMap.ToString() + "\"",
+                                    "\"" + Path.Combine(config2.Outdir, keyword + "_wordcloud.png") + "\"",
+                                    "\"" + Path.Combine(config2.Outdir, "tweetdata", keyword + "_result.xlsx") + "\"");
+
+                // Pythonの実行
+                var myProcess = new Process
+                {
+                    StartInfo = new ProcessStartInfo(this.CommonValues.PythonPath)
+                    {
+                        UseShellExecute = false,
+                        RedirectStandardOutput = true,
+                        Arguments = command
+                    }
+                };
+
+                myProcess.Start();
+                StreamReader myStreamReader = myProcess.StandardOutput;
+
+                string? myString = myStreamReader.ReadLine();
+                myProcess.WaitForExit();
+                myProcess.Close();
+                //Console.WriteLine(myString);
+
+                string image_path = Path.Combine(config2.Outdir, String.Format("{0}_wordcloud.png", keyword));
+                // 画像ファイルのセット
+                this.ImagePath = image_path;
+
+                // 名詞リストの読み込み
+                OpenNounCount(keyword);
+            }
+            catch (Exception ex)
+            {
+                ShowMessage.ShowErrorOK(ex.Message, "Error");
+            }
+        }
+        #endregion
+
+        #region フィルタが変更された際の処理
+        /// <summary>
+        /// フィルタが変更された際の処理
+        /// </summary>
         public void FilterChanged()
         {
             try
@@ -316,6 +381,7 @@ namespace ZeikomiWordCloud.ViewModels
                 ShowMessage.ShowErrorOK(ex.Message, "Error");
             }
         }
+        #endregion
 
         #region 設定画面を開く処理
         /// <summary>
@@ -335,6 +401,7 @@ namespace ZeikomiWordCloud.ViewModels
 
                 // 設定ファイルの読み込み
                 this.CommonValues.TwitterAPIConfig.LoadXML();
+                this.CommonValues.WordCloudConfig.LoadXML();
             }
             catch (Exception ex)
             {
@@ -386,6 +453,8 @@ namespace ZeikomiWordCloud.ViewModels
 
                     // 画面上に描画
                     this.TweetItems.Items = new System.Collections.ObjectModel.ObservableCollection<TweetDataM>(list);
+                    NotifyPropertyChanged("TwitterItemsFilter");
+
                 }
             }
             catch (Exception ex)

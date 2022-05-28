@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:ZeikomiWordCloud"
         xmlns:ViewModels="clr-namespace:ZeikomiWordCloud.ViewModels" xmlns:b="http://schemas.microsoft.com/xaml/behaviors" xmlns:Converters="clr-namespace:ZeikomiWordCloud.Common.Converters" x:Class="ZeikomiWordCloud.MainWindow"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="WordCloudツイッター検索" Height="450" Width="800">
     <Window.Resources>
         <Converters:StringToImageSourceConverter x:Key="StringToImageSourceConverter"/>
     </Window.Resources>

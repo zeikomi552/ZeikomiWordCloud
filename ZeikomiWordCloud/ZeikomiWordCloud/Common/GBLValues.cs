@@ -79,6 +79,31 @@ namespace ZeikomiWordCloud.Common
         }
         #endregion
 
+        #region WordCloud設定用コンフィグ[WordCloudConfig]プロパティ
+        /// <summary>
+        /// WordCloud設定用コンフィグ[WordCloudConfig]プロパティ用変数
+        /// </summary>
+        ConfigManager<WordCloudM> _WordCloudConfig = new("Config", "WordCloud.config", new WordCloudM());
+        /// <summary>
+        /// WordCloud設定用コンフィグ[WordCloudConfig]プロパティ
+        /// </summary>
+        public ConfigManager<WordCloudM> WordCloudConfig
+        {
+            get
+            {
+                return _WordCloudConfig;
+            }
+            set
+            {
+                if (_WordCloudConfig == null || !_WordCloudConfig.Equals(value))
+                {
+                    _WordCloudConfig = value;
+                    NotifyPropertyChanged("WordCloudConfig");
+                }
+            }
+        }
+        #endregion
+
 
     }
 }
