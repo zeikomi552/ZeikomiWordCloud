@@ -523,7 +523,7 @@ namespace ZeikomiWordCloud.Models
 			this.Follower_Count = (int)AdjustValue(row.Cell("P").Value, 1);
 			this.Follow_Count = (int)AdjustValue(row.Cell("Q").Value, 1);
 			this.Tweet_Count = (int)AdjustValue(row.Cell("R").Value, 1);
-			this.Like_Count = (int)AdjustValue(row.Cell("S").Value, 1);
+			this.Listed_Count = (int)AdjustValue(row.Cell("S").Value, 1);
 		}
 	}
 }
