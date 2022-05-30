@@ -7,7 +7,7 @@
         xmlns:local="clr-namespace:ZeikomiWordCloud"
         xmlns:ViewModels="clr-namespace:ZeikomiWordCloud.ViewModels" xmlns:b="http://schemas.microsoft.com/xaml/behaviors" xmlns:Converters="clr-namespace:ZeikomiWordCloud.Common.Converters" x:Class="ZeikomiWordCloud.MainWindow"
         mc:Ignorable="d"
-        Title="WordCloudツイッター検索" Height="450" Width="800">
+        Title="WordCloudツイッター検索" Height="800" Width="1200">
     <Window.Resources>
         <Converters:StringToImageSourceConverter x:Key="StringToImageSourceConverter"/>
     </Window.Resources>
@@ -104,13 +104,32 @@
             </Grid>
             <Grid Grid.Row="2">
                 <GroupBox Header="ツイート内容">
-                    <DataGrid ItemsSource="{Binding TwitterItemsFilter.Items}" 
+                    <DataGrid FrozenColumnCount="2" Language="ja-jp" AutoGenerateColumns="False" ItemsSource="{Binding TwitterItemsFilter.Items}" 
                           SelectedItem="{Binding TwitterItemsFilter.SelectedItem, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True">
                         <b:Interaction.Triggers>
                             <b:EventTrigger EventName="MouseDoubleClick">
                                 <b:CallMethodAction MethodName="TwitterRowDoubleClick" TargetObject="{Binding}"/>
                             </b:EventTrigger>
                         </b:Interaction.Triggers>
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="ユーザー名" Binding="{Binding UserName}"/>
+                            <DataGridTextColumn Header="ツイート日時" Binding="{Binding CreatedAt.LocalDateTime,StringFormat=MM/dd(ddd) HH:mm}"/>
+                            <DataGridTextColumn Header="リツイート数" Binding="{Binding Retweet_Count}"/>
+                            <DataGridTextColumn Header="リプライ数" Binding="{Binding Replay_Count}"/>
+                            <DataGridTextColumn Header="いいね数" Binding="{Binding Like_Count}"/>
+                            <DataGridTextColumn Header="ツイート内容" Binding="{Binding Text}"/>
+                            <DataGridTextColumn Header="ユーザーID" Binding="{Binding Autor_Id}"/>
+                            <DataGridTextColumn Header="ツイートID" Binding="{Binding Id_X}"/>
+                            <DataGridTextColumn Header="言語" Binding="{Binding Lang}"/>
+                            <DataGridTextColumn Header="クォート数" Binding="{Binding Quate_Count}"/>
+                            <DataGridTextColumn Header="ユーザー登録日時" Binding="{Binding CreatedAtAutor.LocalDateTime,StringFormat=MM/dd(ddd) HH:mm}"/>
+                            <DataGridTextColumn Header="名前" Binding="{Binding Name}"/>
+                            <DataGridTextColumn Header="ユーザー説明" Binding="{Binding Description}"/>
+                            <DataGridTextColumn Header="フォロー数" Binding="{Binding Follow_Count}"/>
+                            <DataGridTextColumn Header="フォロワー数" Binding="{Binding Follower_Count}"/>
+                            <DataGridTextColumn Header="ツイート数" Binding="{Binding Tweet_Count}"/>
+                            <DataGridTextColumn Header="リストされ数" Binding="{Binding Listed_Count}"/>
+                        </DataGrid.Columns>
                     </DataGrid>
                 </GroupBox>
             </Grid>
